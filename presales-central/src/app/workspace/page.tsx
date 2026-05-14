@@ -16,7 +16,6 @@ import {
 type SortKey = "recent" | "title";
 type Modal   = null | "create";
 
-/* ── Create Deck Modal ────────────────────────────────────── */
 function CreateDeckModal({
   repId,
   onClose,
@@ -138,7 +137,6 @@ function CreateDeckModal({
   );
 }
 
-/* ── Deck Card ────────────────────────────────────────────── */
 function DeckCard({
   deck,
   onDelete,
@@ -203,27 +201,22 @@ function DeckCard({
   );
 }
 
-/* ── Main Page ────────────────────────────────────────────── */
 export default function WorkspacePage() {
-  const [userId,   setUserId]   = useState("");
-  const [decks,    setDecks]    = useState<DemoDeck[]>([]);
-  const [loading,  setLoading]  = useState(true);
-  const [modal,    setModal]    = useState<Modal>(null);
-  const [search,   setSearch]   = useState("");
+  const [userId,     setUserId]     = useState("");
+  const [decks,      setDecks]      = useState<DemoDeck[]>([]);
+  const [loading,    setLoading]    = useState(true);
+  const [modal,      setModal]      = useState<Modal>(null);
+  const [search,     setSearch]     = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
-  const [sortKey,  setSortKey]  = useState<SortKey>("recent");
-  const [sortOpen, setSortOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [toast,    setToast]    = useState("");
+  const [sortKey,    setSortKey]    = useState<SortKey>("recent");
+  const [sortOpen,   setSortOpen]   = useState(false);
+  const [viewMode,   setViewMode]   = useState<"grid" | "list">("grid");
+  const [toast,      setToast]      = useState("");
 
   useEffect(() => {
-    fetch("/api/auth/session")
-      .then(r => r.ok ? r.json() : null)
-      .then(s => {
-        const id = s?.user?.email ?? s?.user?.id ?? "";
-        if (id) setUserId(id);
-        return listDecks(id);
-      })
+    const id = "default";
+    setUserId(id);
+    listDecks(id)
       .then(setDecks)
       .catch(console.error)
       .finally(() => setLoading(false));
@@ -267,21 +260,7 @@ export default function WorkspacePage() {
             <span className={styles.brandName}>PreSales Central</span>
             <span className={styles.brandTag}>AI Pre-Sales</span>
           </a>
-          <div className={styles.topBarActions}>
-            <span className={styles.userGreet}>{userId || "Rep workspace"}</span>
-            <button
-              className={styles.signOutBtn}
-              onClick={async () => {
-                const csrf = await fetch("/api/auth/csrf").then(r => r.json()).then(d => d.csrfToken ?? "");
-                const form = document.createElement("form");
-                form.method = "POST"; form.action = "/api/auth/signout";
-                const t = document.createElement("input"); t.type = "hidden"; t.name = "csrfToken"; t.value = csrf;
-                const cb = document.createElement("input"); cb.type = "hidden"; cb.name = "callbackUrl"; cb.value = "/";
-                form.appendChild(t); form.appendChild(cb);
-                document.body.appendChild(form); form.submit();
-              }}
-            >Sign out</button>
-          </div>
+          <div className={styles.topBarActions} />
         </div>
       </header>
 
